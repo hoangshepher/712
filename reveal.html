@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Anniversary — Heart Reveal</title>
+
+<style>
+  html,body{
+    margin:0;
+    height:100%;
+    background:#000;
+    font-family:"Inter", sans-serif;
+    overflow:hidden;
+    transition:background 2s ease;
+  }
+
+  #stage{
+    position:fixed;
+    inset:0;
+    transition:opacity 1.5s ease;
+  }
+
+  #loveText{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -130%);
+    color:#ffb6d9;
+    font-size:48px;
+    font-weight:700;
+    text-shadow:0 0 12px #ff7eb8;
+    opacity:0;
+    transition:opacity 1.2s ease;
+    pointer-events:none;
+  }
+
+  /* Letter wrapper */
+  #letterWrapper{
+    position:fixed;
+    left:50%;
+    top:52%;
+    transform:translate(-50%, -50%);
+    width:min(700px, 92vw);
+    display:none;
+    animation:fadeIn 1.3s ease forwards;
+  }
+
+  .paper{
+    background-size:cover;
+    background-position:center;
+    border-radius:16px;
+    padding:40px 45px;
+    box-shadow:0 8px 30px rgba(255,120,150,0.35);
+    border:2px solid rgba(255,255,255,0.4);
+    backdrop-filter:blur(3px);
+    position:relative;
+  }
+
+  .paper.style2{
+    background-image:url('https://i.imgur.com/9kTxQbR.png');
+  }
+
+  #letterTitle{
+    margin:0;
+    font-size:23px;
+    color:#ff6fa8;
+    text-align:center;
+    margin-bottom:18px;
+    font-weight:700;
+  }
+
+  #letterContent{
+    background:rgba(255,255,255,0.55);
+    padding:22px 24px;
+    border-radius:12px;
+    font-size:17px;
+    line-height:1.55;
+    color:#333;
+    white-space:pre-line;
+  }
+
+  /* Cute floating hearts */
+  .heart{
+    position:absolute;
+    font-size:26px;
+    color:#ff87b7;
+    opacity:0.85;
+    animation:float 3s ease-in-out infinite;
+  }
+
+  .h1{ top:-10px; left:-10px; }
+  .h2{ top:-10px; right:-10px; animation-delay:0.8s; }
+  .h3{ bottom:-10px; left:-10px; animation-delay:1.4s; }
+  .h4{ bottom:-10px; right:-12px; animation-delay:2s; }
+
+  @keyframes float{
+    0%{ transform:translateY(0); }
+    50%{ transform:translateY(-8px); }
+    100%{ transform:translateY(0); }
+  }
+
+  @keyframes fadeIn{
+    0%{opacity:0; transform:translate(-50%, -40%);}
+    100%{opacity:1; transform:translate(-50%, -50%);}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stage"></canvas>
+<div id="loveText">I love you</div>
+
+<div id="letterWrapper">
+  <div class="paper style2">
+
+    <!-- Floating hearts -->
+    <div class="heart h1">💖</div>
+    <div class="heart h2">💕</div>
+    <div class="heart h3">💗</div>
+    <div class="heart h4">💘</div>
+
+    <h3 id="letterTitle">💌 Gửi đến người anh thương…</h3>
+
+    <div id="letterContent">
+Bé à, Tụi mình đã bên nhau được một khoảng thời gian khá dài rùi.
+Cảm ơn Bé vì đã đến bên anh, vì đã mang đến cho anh những kỉ niệm 
+.  
+Cảm ơn Bé vì những nụ cười, những quan tâm nhỏ bé nhưng luôn khiến anh ấm áp.  
+
+Anh may mắn lắm vì có em cạnh bên.  
+Chúc cho chúng ta luôn hạnh phúc, nhẹ nhàng và yêu nhau thật lâu…  
+
+Yêu em nhiều lắm ❤️  
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* --- Particle Heart Animation --- */
+const canvas = document.getElementById("stage");
+const ctx = canvas.getContext("2d");
+let W = canvas.width = innerWidth;
+let H = canvas.height = innerHeight;
+
+window.addEventListener("resize", ()=>{
+  W = canvas.width = innerWidth;
+  H = canvas.height = innerHeight;
+  createHeartPoints();
+});
+
+const particles = [];
+const TOTAL = 800;
+let targets = [];
+
+class Particle{
+  constructor(){
+    this.x = Math.random()*W;
+    this.y = Math.random()*H;
+    this.tx = this.x;
+    this.ty = this.y;
+    this.vx = 0;
+    this.vy = 0;
+    this.size = Math.random()*1.4 + 0.6;
+    this.alpha = 0;
+    this.speed = 0.05 + Math.random()*0.05;
+  }
+  move(){
+    const dx = this.tx - this.x;
+    const dy = this.ty - this.y;
+    this.vx += dx * this.speed * 0.02;
+    this.vy += dy * this.speed * 0.02;
+    this.vx *= 0.92;
+    this.vy *= 0.92;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.alpha += (1 - this.alpha) * 0.02;
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255,180,220, ${0.7*this.alpha})`;
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+/* Heart equation */
+function heartPoints(n, scale=12){
+  let arr=[];
+  for(let i=0;i<n;i++){
+    let t = Math.PI*2 * (i/n);
+    let x = 16*Math.pow(Math.sin(t),3);
+    let y = 13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
+    arr.push({
+      x: W/2 + x*scale,
+      y: H/2 - y*scale - 20
+    });
+  }
+  return arr;
+}
+
+function createHeartPoints(){
+  targets = heartPoints(TOTAL, Math.min(W,H)/40);
+}
+
+function assignTargets(){
+  particles.forEach((p,i)=>{
+    const t = targets[i % targets.length];
+    p.tx = t.x;
+    p.ty = t.y;
+  });
+}
+
+function init(){
+  particles.length = 0;
+  for(let i=0;i<TOTAL;i++){
+    particles.push(new Particle());
+  }
+  createHeartPoints();
+  assignTargets();
+}
+init();
+
+/* Animation */
+let pulse = 0;
+
+function render(t){
+  ctx.clearRect(0,0,W,H);
+
+  pulse += 0.02;
+  let pulseAmt = Math.sin(pulse)*3;
+
+  targets.forEach((t,i)=>{
+    const ang = Math.atan2(t.y-(H/2-20), t.x-W/2);
+    t.x += Math.cos(ang) * (pulseAmt*0.05);
+    t.y += Math.sin(ang) * (pulseAmt*0.05);
+  });
+
+  particles.forEach(p=>{
+    p.move();
+    p.draw();
+  });
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+
+/* Click event → hide heart + show letter */
+let clicked = false;
+
+canvas.addEventListener("click", ()=>{
+  if(clicked) return;
+  clicked = true;
+
+  // Fade out effect
+  document.getElementById("stage").style.opacity   = 0;
+  document.getElementById("loveText").style.opacity = 0;
+
+  // Background turns pink
+  document.body.style.background = "#ffd6e8";
+
+  // Show letter after fade
+  setTimeout(()=>{
+    document.getElementById("letterWrapper").style.display = "block";
+  }, 1500);
+});
+</script>
+</body>
+</html>

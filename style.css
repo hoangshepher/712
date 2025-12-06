@@ -1,0 +1,138 @@
+/* ===== GLOBAL ===== */
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: #FDEFF4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ===== PAGE 1 ===== */
+.card {
+  width: 900px;
+  height: 520px;
+  background: #F7D6E1;
+  border-radius: 18px;
+  display: flex;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+
+}
+
+.photo {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.frame {
+  width: 360px;
+  height: 420px;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.auth {
+  width: 50%;
+  padding: 40px;
+  text-align: center;
+}
+
+.passbox {
+  margin: 20px auto;
+  width: 260px;
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pass-display {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: pink;
+  opacity: 0.3;
+}
+
+.controls .clearBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.pad {
+  margin: 20px auto;
+  width: 260px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.key {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+}
+
+/* ===== PAGE 2 ===== */
+.reveal-body {
+  background: black;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+}
+
+.letterBox {
+  display: none;
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  background: rgba(255,255,255,0.1);
+  padding: 16px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+}
+
+.letterBox textarea {
+  width: 100%;
+  height: 150px;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.close, .save {
+  background: pink;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
